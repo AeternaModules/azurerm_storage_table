@@ -2,6 +2,7 @@ resource "azurerm_storage_table" "storage_tables" {
   for_each = var.storage_tables
 
   name                 = each.value.name
+  storage_account_id   = each.value.storage_account_id
   storage_account_name = each.value.storage_account_name
 
   dynamic "acl" {
