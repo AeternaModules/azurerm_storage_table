@@ -18,47 +18,15 @@ EOT
     name                 = string
     storage_account_id   = optional(string)
     storage_account_name = optional(string)
-    acl = optional(object({
-      access_policy = optional(object({
+    acl = optional(list(object({
+      access_policy = optional(list(object({
         expiry      = string
         permissions = string
         start       = string
-      }))
+      })))
       id = string
-    }))
+    })))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.storage_tables : (
-        v.acl == null || (length(v.acl.id) >= 1 && length(v.acl.id) <= 64)
-      )
-    ])
-    error_message = "must be between 1 and 64 characters"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.storage_tables : (
-        v.acl == null || (v.acl.access_policy == null || (length(v.acl.access_policy.start) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.storage_tables : (
-        v.acl == null || (v.acl.access_policy == null || (length(v.acl.access_policy.expiry) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.storage_tables : (
-        v.acl == null || (v.acl.access_policy == null || (length(v.acl.access_policy.permissions) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_storage_table's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -71,5 +39,17 @@ EOT
   #   source:    [from commonids.ValidateStorageAccountID] !ok
   # path: storage_account_id
   #   source:    [from commonids.ValidateStorageAccountID] err != nil
+  # path: acl.id
+  #   condition: length(value) >= 1 && length(value) <= 64
+  #   message:   must be between 1 and 64 characters
+  # path: acl.access_policy.start
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: acl.access_policy.expiry
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: acl.access_policy.permissions
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
