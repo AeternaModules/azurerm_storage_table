@@ -1,3 +1,7 @@
+output "storage_tables_id" {
+  description = "Map of id values across all storage_tables, keyed the same as var.storage_tables"
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.id }
+}
 output "storage_tables_acl" {
   description = "Map of acl values across all storage_tables, keyed the same as var.storage_tables"
   value       = { for k, v in azurerm_storage_table.storage_tables : k => v.acl }
