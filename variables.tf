@@ -27,29 +27,38 @@ EOT
       id = string
     })))
   }))
-  # --- Unconfirmed validation candidates, derived from azurerm_storage_table's provider source ---
-  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
-  # or a path that crosses a list-typed block (needs its own for_each wrapping).
-  # Review, translate into a real validation{} block above, and delete once confirmed.
-  # path: name
-  #   source:    [from validate.StorageTableName] value == "table"
-  # path: name
-  #   source:    [from validate.StorageTableName] !regexp.MustCompile(`^[A-Za-z][A-Za-z0-9]{2,62}$`).MatchString(value)
-  # path: storage_account_id
-  #   source:    [from commonids.ValidateStorageAccountID] !ok
-  # path: storage_account_id
-  #   source:    [from commonids.ValidateStorageAccountID] err != nil
-  # path: acl.id
-  #   condition: length(value) >= 1 && length(value) <= 64
-  #   message:   must be between 1 and 64 characters
-  # path: acl.access_policy.start
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: acl.access_policy.expiry
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: acl.access_policy.permissions
-  #   condition: length(value) > 0
-  #   message:   must not be empty
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_tables : (
+        v.acl == null || alltrue([for item in v.acl : (length(item.id) >= 1 && length(item.id) <= 64)])
+      )
+    ])
+    error_message = "must be between 1 and 64 characters"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_tables : (
+        v.acl == null || alltrue([for item in v.acl : (item.access_policy == null || alltrue([for item in item.access_policy : (length(item.start) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_tables : (
+        v.acl == null || alltrue([for item in v.acl : (item.access_policy == null || alltrue([for item in item.access_policy : (length(item.expiry) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.storage_tables : (
+        v.acl == null || alltrue([for item in v.acl : (item.access_policy == null || alltrue([for item in item.access_policy : (length(item.permissions) > 0)]))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  # Note: 4 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
 }
 
