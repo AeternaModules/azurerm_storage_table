@@ -1,25 +1,25 @@
 output "storage_tables_id" {
   description = "Map of id values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.id }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.id if v.id != null && length(v.id) > 0 }
 }
 output "storage_tables_acl" {
   description = "Map of acl values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.acl }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.acl if v.acl != null && length(v.acl) > 0 }
 }
 output "storage_tables_name" {
   description = "Map of name values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.name }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.name if v.name != null && length(v.name) > 0 }
 }
 output "storage_tables_resource_manager_id" {
   description = "Map of resource_manager_id values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.resource_manager_id }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.resource_manager_id if v.resource_manager_id != null && length(v.resource_manager_id) > 0 }
 }
 output "storage_tables_storage_account_id" {
   description = "Map of storage_account_id values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_id }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_id if v.storage_account_id != null && length(v.storage_account_id) > 0 }
 }
 output "storage_tables_storage_account_name" {
   description = "Map of storage_account_name values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_name }
+  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_name if v.storage_account_name != null && length(v.storage_account_name) > 0 }
 }
 
