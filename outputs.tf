@@ -18,8 +18,4 @@ output "storage_tables_storage_account_id" {
   description = "Map of storage_account_id values across all storage_tables, keyed the same as var.storage_tables"
   value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_id if v.storage_account_id != null && length(v.storage_account_id) > 0 }
 }
-output "storage_tables_storage_account_name" {
-  description = "Map of storage_account_name values across all storage_tables, keyed the same as var.storage_tables"
-  value       = { for k, v in azurerm_storage_table.storage_tables : k => v.storage_account_name if v.storage_account_name != null && length(v.storage_account_name) > 0 }
-}
 

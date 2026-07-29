@@ -3,9 +3,8 @@ variable "storage_tables" {
 Map of storage_tables, attributes below
 Required:
     - name
-Optional:
     - storage_account_id
-    - storage_account_name
+Optional:
     - acl (block):
         - access_policy (optional, block):
             - expiry (required)
@@ -15,9 +14,8 @@ Optional:
 EOT
 
   type = map(object({
-    name                 = string
-    storage_account_id   = optional(string)
-    storage_account_name = optional(string)
+    name               = string
+    storage_account_id = string
     acl = optional(list(object({
       access_policy = optional(list(object({
         expiry      = string
